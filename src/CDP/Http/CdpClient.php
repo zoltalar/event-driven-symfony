@@ -8,23 +8,21 @@ use App\CDP\Analytics\Model\ModelInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class CdpClient 
+class CdpClient
 {
     private const CDP_API_BASE_URL = 'https://cdp-api.site';
-    
+
     public function __construct(
         private HttpClientInterface $httpClient,
         #[Autowire('%cdp.api_key%')]
         private string $apiKey
-    ) 
-    {
-        
+    ) {
     }
-    
+
     public function track(ModelInterface $model): void
     {
         $this->httpClient->request(
-            'POST', 
+            'POST',
             sprintf('%s/track', self::CDP_API_BASE_URL),
             [
                 'body' => json_encode($model->toArray(), JSON_THROW_ON_ERROR),
@@ -39,7 +37,7 @@ class CdpClient
     public function identify(ModelInterface $model): void
     {
         $this->httpClient->request(
-            'POST', 
+            'POST',
             sprintf('%s/identify', self::CDP_API_BASE_URL),
             [
                 'body' => json_encode($model->toArray(), JSON_THROW_ON_ERROR),

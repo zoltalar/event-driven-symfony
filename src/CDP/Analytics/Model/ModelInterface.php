@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\CDP\Analytics\Model;
 
-interface ModelInterface 
+interface ModelInterface
 {
     /**
      * @return array<string, mixed>

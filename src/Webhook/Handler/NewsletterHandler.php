@@ -16,13 +16,13 @@ final class NewsletterHandler implements WebhookHandlerInterface
     ];
     
     #[Override]
-    public function supports(Webhook $webhook): bool 
+    public function supports(Webhook $webhook): bool
     {
         return in_array($webhook->getEvent(), self::SUPPORTED_EVENTS);
     }
     
     #[Override]
-    public function handle(Webhook $webhook): void 
+    public function handle(Webhook $webhook): void
     {
         dd($webhook);
     }    

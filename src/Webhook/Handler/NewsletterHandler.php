@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Webhook\Handler;
 
 use App\DTO\Webhook;
+use App\DTO\Newsletter\Factory\NewsletterWebhookFactory;
 use Override;
 
 final class NewsletterHandler implements WebhookHandlerInterface
@@ -15,6 +16,11 @@ final class NewsletterHandler implements WebhookHandlerInterface
         'newsletter_unsubscribed'
     ];
     
+    public function __construct(
+        private NewsletterWebhookFactory $newsletterWebhookFactory
+    ) {
+    }
+    
     #[Override]
     public function supports(Webhook $webhook): bool
     {
@@ -24,6 +30,7 @@ final class NewsletterHandler implements WebhookHandlerInterface
     #[Override]
     public function handle(Webhook $webhook): void
     {
-        dd($webhook);
+        $newsletterWebhook = $this->newsletterWebhookFactory->create($webhook);
+        dd($newsletterWebhook);
     }    
 }

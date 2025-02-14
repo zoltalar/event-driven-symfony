@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\DTO\Newsletter;
 
+use App\DTO\User\User;
 use DateTimeImmutable;
 
 class NewsletterWebhook 

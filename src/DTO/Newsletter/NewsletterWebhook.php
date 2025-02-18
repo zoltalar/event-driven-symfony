@@ -6,8 +6,8 @@ namespace App\DTO\Newsletter;
 
 use App\CDP\Analytics\Model\Subscription\SubscriptionSourceInterface;
 use App\DTO\User\User;
+use DateInterval;
 use DateTimeImmutable;
-use Override;
 
 class NewsletterWebhook implements SubscriptionSourceInterface
 {
@@ -78,33 +78,78 @@ class NewsletterWebhook implements SubscriptionSourceInterface
         $this->newsletter = $newsletter;
     }
 
-    #[Override]
+    public function getProduct(): string
+    {
+        // newsletter.product_id
+        return $this->newsletter->getProductId();
+    }
+
+    public function getEventDate(): string
+    {
+        // timestamp
+        return $this->timestamp->format('Y-m-d');
+    }
+
+    public function getSubscriptionId(): string
+    {
+        // id
+        return $this->id;
+    }
+
     public function getEmail(): string
     {
+        // user.email
         return $this->user->getEmail();
     }
 
-    #[Override]
-    public function getEventDate(): string
+    public function getUserId(): string
+    {
+        // user.client_id
+        return $this->user->getClientId();
+    }
+
+    public function requiresConsent(): bool
+    {
+        return in_array($this->user->getRegion(), self::CONSENT_REGIONS);
+    }
+
+    public function getPlatform(): string
+    {
+        return 'web';
+    }
+
+    public function getProductName(): string
+    {
+        return $this->newsletter->getNewsletterId();
+    }
+
+    public function getRenewalDate(): string
+    {
+        $date = $this->timestamp;
+
+        $interval = new DateInterval('P1Y');
+
+        return $date->add($interval)->format('Y-m-d');
+    }
+
+    public function getStartDate(): string
     {
         return $this->timestamp->format('Y-m-d');
     }
 
-    #[Override]
-    public function getProduct(): string
+    public function getType(): string
     {
-        return $this->newsletter->getProductId();
+        return 'newsletter';
     }
 
-    #[Override]
-    public function getSubscriptionId(): string
+    public function getStatus(): string
     {
-        return $this->id;
-    }
+        $status = 'subscribed';
 
-    #[Override]
-    public function getUserId(): string
-    {
-        return $this->user->getClientId();
+        if ($this->event === 'newsletter_unsubscribed') {
+            $status = 'unsubscribed';
+        }
+
+        return $status;
     }
 }
